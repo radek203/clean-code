@@ -3,11 +3,12 @@ package edu.agh.wfiis.solid.tasks.task1;
 public class SolidPointsApplication {
     public static void main(String[] args) {
         User alice = new User(1, "Alice");
+        User bob = new User(2, "Bob");
         Code codeToReview = new Code(1,
                 """
                 System.out.println("Hello world");
                 """);
-        PullRequest pr = new PullRequest(1, alice, codeToReview);
+        PullRequest pr = new PullRequest(1, alice, codeToReview, bob);
 
         try {
             pr.addReview(CodeQuality.EXCELLENT);

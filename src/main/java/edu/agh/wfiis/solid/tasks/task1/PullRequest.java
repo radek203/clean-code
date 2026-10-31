@@ -6,11 +6,13 @@ public class PullRequest {
     private final User codeOwner;
     private final Code code;
     private int solidPoints = 0;
+    private final User reviewer;
 
-    public PullRequest(long id, User codeOwner, Code code) {
+    public PullRequest(long id, User codeOwner, Code code, User reviewer) {
         this.id = id;
         this.codeOwner = codeOwner;
         this.code = code;
+        this.reviewer = reviewer;
     }
 
     public void viewPoints() {
@@ -23,9 +25,9 @@ public class PullRequest {
             throw new IllegalArgumentException("Code solid points must be positive after review");
         }
         if (points < 0) {
-            System.out.println(codeQuality.name() + " code reviewed. Points subtracted from " + codeOwner.name() + ".");
+            System.out.println(codeQuality.name() + " code reviewed by " + reviewer.name() + ". Points subtracted from " + codeOwner.name() + ".");
         } else {
-            System.out.println(codeQuality.name() + " code reviewed. Points awarded to " + codeOwner.name() + ".");
+            System.out.println(codeQuality.name() + " code reviewed by " + reviewer.name() + ". Points awarded to " + codeOwner.name() + ".");
         }
         solidPoints += points;
     }
