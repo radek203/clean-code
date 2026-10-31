@@ -6,34 +6,40 @@ import java.util.List;
 class Application {
     public static void main(String[] args) {
         Manage manage = new Manage();
-        UserWithCoding u1 = new UserWithCoding("JohnDoe", "john.doe@example.com", "password123", 100, true);
-        UserWithCoding jane = new UserWithCoding("jane", "jane.smith@example.com", "pass", 50, false);
+        User john = new User("John Doe", "john.doe@example.com", "password123", true);
+        User jane = new User("Jane", "jane.smith@example.com", "pass", false);
+        User bob = new User("Bob", "bob@example.com", "qwerty", true);
 
-        StringBuilder errors = new StringBuilder();
-        manage.handleUserValidationProcess(u1, errors);
-        if (errors.length() > 0) {
-            System.out.println("Validation errors: " + errors);
+        Code johnsCode = new Code(1, john);
+        Code janesCode = new Code(2, jane);
+
+        List<String> johnErrors = new ArrayList<>();
+        john.validate(johnErrors);
+        if (!johnErrors.isEmpty()) {
+            System.out.println("Validation errors: " + johnErrors);
         }
-        manage.handleUserValidationProcess(jane, errors);
-        if (errors.length() > 0) {
-            System.out.println("Validation errors: " + errors);
+
+        List<String> janeErrors = new ArrayList<>();
+        jane.validate(janeErrors);
+        if (!janeErrors.isEmpty()) {
+            System.out.println("Validation errors: " + janeErrors);
         }
 
-        List<String> comments = new ArrayList<>();
-        comments.add("SOLID rules preserved");
-        comments.add("Good naming");
-        comments.add("Readable code");
+        List<String> johnsCodeComments = new ArrayList<>();
+        johnsCodeComments.add("SOLID rules preserved");
+        johnsCodeComments.add("Good naming");
+        johnsCodeComments.add("Readable code");
 
-        Order review = manage.handle(u1, comments, "Bob");
-        manage.process(u1.id, review.ref, 10, "Great job, keep it up!");
+        Review johnsCodeReview = manage.addReview(johnsCode, johnsCodeComments, bob, 100);
+        manage.finishReview(johnsCodeReview, 10, "Great job, keep it up!");
 
-        comments.add("LSP violated");
-        comments.add("Good naming");
-        Order review2 = manage.handle(jane, comments, "Bob");
-        manage.handleExt(jane, new ArrayList<>(){{this.add("I forgot that ISP violation should be fixed too");}});
-        manage.process(jane.id, review2.ref, 1, "Need some improvement!");
+        List<String> janesCodeComments = new ArrayList<>();
+        janesCodeComments.add("LSP violated");
+        janesCodeComments.add("Good naming");
+        Review janesCodeReview = manage.addReview(janesCode, janesCodeComments, bob, 50);
+        manage.handleCodeOwnerComments(janesCodeReview, List.of("I forgot that ISP violation should be fixed too"));
+        manage.finishReview(janesCodeReview, 1, "Need some improvement!");
 
-        String betterUser = manage.compare(u1, jane);
-        System.out.println("User with better points: " + betterUser);
+        Review.compare(johnsCodeReview, janesCodeReview);
     }
 }
