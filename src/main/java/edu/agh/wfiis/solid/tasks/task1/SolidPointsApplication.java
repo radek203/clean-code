@@ -2,32 +2,30 @@ package edu.agh.wfiis.solid.tasks.task1;
 
 public class SolidPointsApplication {
     public static void main(String[] args) {
-        SolidPoints alice = new SolidPoints("Alice");
-        CodeReviewer bob = new CodeReviewer("Bob");
-        PointsViewer charlie = new PointsViewer("Charlie");
+        User alice = new User(1, "Alice");
+        Code codeToReview = new Code(1,
+                """
+                System.out.println("Hello world");
+                """);
+        PullRequest pr = new PullRequest(1, alice, codeToReview);
 
-        // Adding points directly for Alice
         try {
-            alice.earnPoints(10);
-            System.out.println("Alice's points: " + alice.getSolidPoints());
-            alice.earnPoints(20);
-            System.out.println("Alice's points: " + alice.getSolidPoints());
+            pr.addReview(CodeQuality.EXCELLENT);
+            pr.viewPoints();
 
-            // Reviewer Bob reviews code and adds points for Alice
-            bob.reviewCode(alice, "excellent"); // Excellent code reviewed
-            System.out.println("Alice's points after review: " + alice.getSolidPoints());
-
-            // Viewer Charlie views Alice's points
-            charlie.viewPoints(alice);
-
-            // Subtract points for bad review
-            bob.reviewCode(alice, "bad"); // Bad code reviewed
-            System.out.println("Alice's points after bad review: " + alice.getSolidPoints());
-
+            pr.addReview(CodeQuality.BAD);
+            pr.viewPoints();
         } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (UnsupportedOperationException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("ERROR: " + e.getMessage());
+        }
+
+        try {
+            for (int i = 0; i < 7; i++) {
+                pr.addReview(CodeQuality.BAD);
+                pr.viewPoints();
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("ERROR: " + e.getMessage());
         }
     }
 }
